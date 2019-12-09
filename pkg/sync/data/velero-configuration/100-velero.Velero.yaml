@@ -1,0 +1,7 @@
+apiVersion: managed.openshift.io/v1alpha1
+kind: Velero
+metadata:
+  labels:
+    api.openshift.com/managed: "true"
+  name: cluster
+  namespace: openshift-velero

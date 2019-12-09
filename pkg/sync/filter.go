@@ -23,11 +23,15 @@ var (
 	storageClassFilter = func(o unstructured.Unstructured) bool {
 		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "storage.k8s.io", Kind: "StorageClass"}
 	}
+	depFilter = func(o unstructured.Unstructured) bool {
+		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "apps", Kind: "Deployment"}
+	}
 	everythingElseFilter = func(o unstructured.Unstructured) bool {
 		return !crdFilter(o) &&
 			!nsFilter(o) &&
 			!saFilter(o) &&
 			!cfgFilter(o) &&
-			!storageClassFilter(o)
+			!storageClassFilter(o) &&
+			!depFilter(o)
 	}
 )

@@ -34,9 +34,6 @@ const (
 	syncOpenshiftManagedGitHashLabelKey     = "managed.openshift.io/gitHash"
 	syncOpenshiftManagedGitRepoNameLabelKey = "managed.openshift.io/gitRepoName"
 	syncOwnedByPodLabelKey                  = "managed.openshift.io/static-config-operator-owned"
-
-	ClusterPlatformAWS ClusterPlatform = "aws"
-	ClusterPlatformGCP ClusterPlatform = "gcp"
 )
 
 type Interface interface {
@@ -159,6 +156,11 @@ func (s *Sync) Sync() (reconcile.Result, error) {
 	// default storage class must be created before PVCs as the admission controller is edge-triggered
 	log.Info("applying storageClass resources")
 	if err := s.applyResources(storageClassFilter, keys); err != nil {
+		return reconcile.Result{}, err
+	}
+
+	log.Info("applying Deployment resources")
+	if err := s.applyResources(depFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
 

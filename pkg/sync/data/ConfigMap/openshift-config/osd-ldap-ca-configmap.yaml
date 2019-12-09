@@ -1,9 +1,0 @@
-apiVersion: v1
-data:
-  ca.crt: test
-kind: ConfigMap
-metadata:
-  labels:
-    api.openshift.com/managed: "true"
-  name: osd-ldap-ca-configmap
-  namespace: openshift-config

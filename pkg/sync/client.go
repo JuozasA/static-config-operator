@@ -44,6 +44,18 @@ func (s *Sync) deleteOrphans() (reconcile.Result, error) {
 					continue
 				}
 
+				if gk.String() == "PackageManifest.packages.operators.coreos.com" { //the server does not allow Delete method on the PackageManifest resource
+					continue
+				}
+
+				if gk.String() == "CatalogSource.operators.coreos.com" {
+					continue
+				}
+
+				if gr.Group.Name == "velero.io" { // Velero Backup resource gets the labels from CRD
+					continue
+				}
+
 				if gk.String() == "Endpoints" { // Services transfer their labels to Endpoints; ignore the latter
 					continue
 				}
@@ -123,7 +135,7 @@ func (s *Sync) readDB() error {
 				return err
 			}
 
-			// defore we even add this object to store for sync,
+			// before we even add this object to store for sync,
 			// check if platform matched and clean labels
 			if !validatePlatform(s.config, o) {
 				return nil
@@ -154,7 +166,7 @@ func (s *Sync) readDB() error {
 func validatePlatform(config *configsv1alpha1.Config, o unstructured.Unstructured) bool {
 	// if no managed-cluster label set - return false. It is mandatory
 	if len(o.GetLabels()[syncOpenshiftManagedClusterLabelKey]) == 0 {
-		log.Error(fmt.Errorf("objectdoes not contains managed-cluster label key"), o.GetName())
+		log.Error(fmt.Errorf("Object does not contains managed-cluster label key"), o.GetName())
 		return false
 	}
 	// IF platform key is set and match config - return true
@@ -231,6 +243,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 			break
 		}
 	}
+
 	if gr == nil {
 		return errors.New("couldn't find group " + o.GroupVersionKind().Group)
 	}
@@ -253,7 +266,8 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 	err = retry.RetryOnConflict(retry.DefaultRetry, func() (err error) {
 		var existing *unstructured.Unstructured
 		existing, err = dc.Resource(res, o.GetNamespace()).Get(o.GetName(), metav1.GetOptions{})
-		if kerrors.IsNotFound(err) {
+		//		if kerrors.IsNotFound(err) {
+		if err != nil {
 			log.Info("Create " + keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()))
 			markSyncPodOwned(o)
 			_, err = dc.Resource(res, o.GetNamespace()).Create(o)
@@ -291,7 +305,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 		o.SetResourceVersion(rv)
 		_, err = dc.Resource(res, o.GetNamespace()).Update(o)
 		if err != nil && strings.Contains(err.Error(), "updates to parameters are forbidden") {
-			log.Info("object %s is not updateable, will delete and re-create", o.GetName())
+			log.Info("object is not updateable, will delete and re-create", o.GetName())
 			err = dc.Resource(res, o.GetNamespace()).Delete(o.GetName(), &metav1.DeleteOptions{})
 			if err != nil {
 				return
@@ -312,7 +326,7 @@ func printDiff(existing, o *unstructured.Unstructured) bool {
 	diffShown := false
 	if gk.String() != "Secret" {
 		if diff := cmp.Diff(*existing, *o); diff != "" {
-			log.Info("diff", diff)
+			log.Info(diff)
 			diffShown = true
 		}
 	}

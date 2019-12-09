@@ -1,0 +1,16 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+metadata:
+  finalizers:
+  - finalizer.operatorsources.operators.coreos.com
+  name: osd-curated-redhat-operators
+  namespace: openshift-marketplace
+  labels:
+    api.openshift.com/managed: "true"
+spec:
+  authorizationToken: {}
+  displayName: Red Hat Operators
+  endpoint: https://quay.io/cnr
+  publisher: Red Hat
+  registryNamespace: curated-redhat-operators
+  type: appregistry

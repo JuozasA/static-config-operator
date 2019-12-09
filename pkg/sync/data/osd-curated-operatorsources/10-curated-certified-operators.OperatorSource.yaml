@@ -1,0 +1,16 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+metadata:
+  finalizers:
+  - finalizer.operatorsources.operators.coreos.com
+  name: osd-curated-certified-operators
+  namespace: openshift-marketplace
+  labels:
+    api.openshift.com/managed: "true"
+spec:
+  authorizationToken: {}
+  displayName: Certified Operators
+  endpoint: https://quay.io/cnr
+  publisher: Red Hat
+  registryNamespace: curated-certified-operators
+  type: appregistry
