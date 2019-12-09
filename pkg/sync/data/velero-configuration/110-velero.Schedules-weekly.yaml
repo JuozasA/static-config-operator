@@ -3,7 +3,6 @@ kind: Schedule
 metadata:
   labels:
     api.openshift.com/managed: "true"
-    hive.openshift.io/cluster-platform: aws
   name: weekly-full-backup
   namespace: openshift-velero
 spec:
