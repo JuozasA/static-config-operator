@@ -266,8 +266,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 	err = retry.RetryOnConflict(retry.DefaultRetry, func() (err error) {
 		var existing *unstructured.Unstructured
 		existing, err = dc.Resource(res, o.GetNamespace()).Get(o.GetName(), metav1.GetOptions{})
-		//		if kerrors.IsNotFound(err) {
-		if err != nil {
+		if kerrors.IsNotFound(err) {
 			log.Info("Create " + keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()))
 			markSyncPodOwned(o)
 			_, err = dc.Resource(res, o.GetNamespace()).Create(o)
@@ -305,7 +304,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 		o.SetResourceVersion(rv)
 		_, err = dc.Resource(res, o.GetNamespace()).Update(o)
 		if err != nil && strings.Contains(err.Error(), "updates to parameters are forbidden") {
-			log.Info("object is not updateable, will delete and re-create", o.GetName())
+			log.Info("object is not updateable, will delete and re-create" + o.GetName())
 			err = dc.Resource(res, o.GetNamespace()).Delete(o.GetName(), &metav1.DeleteOptions{})
 			if err != nil {
 				return
