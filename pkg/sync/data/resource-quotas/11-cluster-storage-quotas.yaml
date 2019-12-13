@@ -1,0 +1,16 @@
+kind: ClusterResourceQuota
+apiVersion: quota.openshift.io/v1
+metadata:
+  name: persistent-volume-quota
+  labels:
+    api.openshift.com/managed: "true"
+spec:
+  selector:
+    annotations: null
+    labels:
+      matchExpressions:
+      - key: managed.openshift.io/storage-pv-quota-exempt
+        operator: DoesNotExist
+  quota:
+    hard:
+      requests.storage: '*** GENERATED ***'

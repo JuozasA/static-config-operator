@@ -10,6 +10,9 @@ var (
 	crdFilter = func(o unstructured.Unstructured) bool {
 		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "apiextensions.k8s.io", Kind: "CustomResourceDefinition"}
 	}
+	cvoFilter = func(o unstructured.Unstructured) bool {
+		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "config.openshift.io", Kind: "ClusterVersion"}
+	}
 	nsFilter = func(o unstructured.Unstructured) bool {
 		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Kind: "Namespace"}
 	}
@@ -23,8 +26,11 @@ var (
 	storageClassFilter = func(o unstructured.Unstructured) bool {
 		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "storage.k8s.io", Kind: "StorageClass"}
 	}
-	depFilter = func(o unstructured.Unstructured) bool {
-		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "apps", Kind: "Deployment"}
+	ogFilter = func(o unstructured.Unstructured) bool {
+		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "operators.coreos.com", Kind: "OperatorGroup"}
+	}
+	ohFilter = func(o unstructured.Unstructured) bool {
+		return o.GroupVersionKind().GroupKind() == schema.GroupKind{Group: "config.openshift.io", Kind: "OperatorHub"}
 	}
 	everythingElseFilter = func(o unstructured.Unstructured) bool {
 		return !crdFilter(o) &&
@@ -32,6 +38,8 @@ var (
 			!saFilter(o) &&
 			!cfgFilter(o) &&
 			!storageClassFilter(o) &&
-			!depFilter(o)
+			!ogFilter(o) &&
+			!ohFilter(o) &&
+			!cvoFilter(o)
 	}
 )

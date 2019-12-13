@@ -3,7 +3,7 @@ kind: Config
 metadata:
   name: cluster
 spec:
-  platform: gcp
+  platform: aws
   config:
     telemeterServerURL: telemeterServerURL.com
     identityAttrEmail: identityAttrEmail
@@ -14,6 +14,8 @@ spec:
     identityURL: identityURL
     identityName: identityName
     identityMappingMethod: identityMappingMethod
+    loadBalancerQuota: '2'
+    storageQuota: 100Gi
     valeroOperatorImage: quay.io/openshift-sre/managed-velero-operator:v0.1.35-49347f0
     # TODO: think something better
-    osdLdapCA: asdasd
+    osdLdapCA: ''

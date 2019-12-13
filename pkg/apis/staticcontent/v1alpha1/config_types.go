@@ -29,6 +29,8 @@ type StaticConfig struct {
 	IdentityURL                   string `json:"identityURL,omitempty"`
 	IdentityName                  string `json:"identityName,omitempty"`
 	IdentityMappingMethod         string `json:"identityMappingMethod,omitempty"`
+	LoadBalancerQuota             string `json:"loadBalancerQuota,omitempty"`
+	StorageQuota                  string `json:"storageQuota,omitempty"`
 
 	// other configuration values
 	OSDLdapCA           string `json:"osdLdapCA,omitempty"`

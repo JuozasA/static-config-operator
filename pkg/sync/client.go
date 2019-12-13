@@ -11,6 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	deprecated_dynamic "k8s.io/client-go/deprecated-dynamic"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/restmapper"
@@ -48,11 +49,19 @@ func (s *Sync) deleteOrphans() (reconcile.Result, error) {
 					continue
 				}
 
-				if gk.String() == "CatalogSource.operators.coreos.com" {
+				if gk.String() == "CatalogSource.operators.coreos.com" { //gets the labels from OperatorSource
 					continue
 				}
 
-				if gr.Group.Name == "velero.io" { // Velero Backup resource gets the labels from CRD
+				if gr.Group.Name == "velero.io" { // Velero resources gets the labels from CRD
+					continue
+				}
+
+				if gk.String() == "ClusterResourceQuota.quota.openshift.io" { // Populating quotas on every NS
+					continue
+				}
+
+				if gk.String() == "Secret" { //oauth copy content from equivalent secrets created by operator in openshift-config NS and places them in it's own NS hence getting the managed labels
 					continue
 				}
 
@@ -150,7 +159,12 @@ func (s *Sync) readDB() error {
 			defer s.storeLock.Unlock()
 
 			defaults(o)
-			s.store[keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName())] = o
+
+			if _, ok := o.Object["patch"]; ok {
+				s.store[keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.Object["name"].(string))] = o
+			} else {
+				s.store[keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName())] = o
+			}
 
 			return nil
 		})
@@ -166,6 +180,9 @@ func (s *Sync) readDB() error {
 func validatePlatform(config *configsv1alpha1.Config, o unstructured.Unstructured) bool {
 	// if no managed-cluster label set - return false. It is mandatory
 	if len(o.GetLabels()[syncOpenshiftManagedClusterLabelKey]) == 0 {
+		if _, ok := o.Object["patch"]; ok {
+			return true
+		}
 		log.Error(fmt.Errorf("Object does not contains managed-cluster label key"), o.GetName())
 		return false
 	}
@@ -249,6 +266,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 	}
 
 	o = o.DeepCopy()
+
 	var res *metav1.APIResource
 	for _, r := range gr.VersionedResources[o.GroupVersionKind().Version] {
 		if gr.Group.Name == "template.openshift.io" && r.Name == "processedtemplates" {
@@ -263,12 +281,41 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 		return errors.New("couldn't find kind " + o.GroupVersionKind().Kind)
 	}
 
+	if l, ok := o.Object["patch"]; ok {
+		patch := []byte(l.(string))
+		var ns string
+		if _, ok := o.Object["namespace"]; ok {
+			ns = o.Object["namespace"].(string)
+		} else {
+			ns = ""
+		}
+
+		old, err := dc.Resource(res, ns).Get(o.Object["name"].(string), metav1.GetOptions{})
+		if kerrors.IsNotFound(err) {
+			log.Info("Requested resource does not exist: " + keyFunc(o.GroupVersionKind().GroupKind(), ns, o.Object["name"].(string)))
+			return nil
+		}
+
+		log.Info("Ensuring required labels exists on " + keyFunc(o.GroupVersionKind().GroupKind(), ns, o.Object["name"].(string)))
+		new, err := dc.Resource(res, ns).Patch(o.Object["name"].(string), types.MergePatchType, patch)
+		if err != nil {
+			return err
+		}
+
+		if diff := cmp.Diff(*old, *new); diff != "" {
+			log.Info(diff)
+		}
+
+		return err
+	}
+
 	err = retry.RetryOnConflict(retry.DefaultRetry, func() (err error) {
 		var existing *unstructured.Unstructured
 		existing, err = dc.Resource(res, o.GetNamespace()).Get(o.GetName(), metav1.GetOptions{})
 		if kerrors.IsNotFound(err) {
 			log.Info("Create " + keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()))
 			markSyncPodOwned(o)
+
 			_, err = dc.Resource(res, o.GetNamespace()).Create(o)
 			if kerrors.IsAlreadyExists(err) {
 				// The "hot path" in write() is Get, check, then maybe Update.
@@ -277,7 +324,7 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 				// initialisation. Between Get returning NotFound and us trying
 				// to Create, the object might be created.  In this case we
 				// return a synthetic Conflict to force a retry.
-				log.Error(err, "error while creating", o.GetNamespace(), o.GetName())
+				log.Error(err, "error while creating", o.GetName())
 				err = kerrors.NewConflict(schema.GroupResource{Group: res.Group, Resource: res.Name}, o.GetName(), errors.New("synthetic"))
 			}
 			return

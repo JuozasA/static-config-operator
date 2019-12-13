@@ -52,8 +52,12 @@ spec:
                   type: string
                 identityURL:
                   type: string
+                loadBalancerQuota:
+                  type: string
                 osdLdapCA:
                   description: other configuration values
+                  type: string
+                storageQuota:
                   type: string
                 telemeterServerURL:
                   type: string

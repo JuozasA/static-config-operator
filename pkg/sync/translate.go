@@ -128,7 +128,7 @@ var translations = map[string][]struct {
 	"Secret/openshift-config/osd-oauth-templates-errors": {
 		{
 			Path:     jsonpath.MustCompile("$.stringData.'errors.html'"),
-			Template: "{{ Base64Encode .Derived.OAuthTemplateErrors }}",
+			Template: "{{ String .Derived.OAuthTemplateErrors }}",
 		},
 	},
 	"Deployment.apps/openshift-velero/managed-velero-operator": {
@@ -140,13 +140,13 @@ var translations = map[string][]struct {
 	"Secret/openshift-config/osd-oauth-templates-login": {
 		{
 			Path:     jsonpath.MustCompile("$.stringData.'login.html'"),
-			Template: "{{ Base64Encode .Derived.OAuthTemplateLogin }}",
+			Template: "{{ String .Derived.OAuthTemplateLogin }}",
 		},
 	},
 	"Secret/openshift-config/osd-oauth-templates-providers": {
 		{
 			Path:     jsonpath.MustCompile("$.stringData.'providers.html'"),
-			Template: "{{ Base64Encode .Derived.OAuthTemplateLogin }}",
+			Template: "{{ String .Derived.OAuthTemplateLogin }}",
 		},
 	},
 	"SelectorSyncIdentityProvider.hive.openshift.io/osd-sre-identityprovider": {
@@ -181,6 +181,18 @@ var translations = map[string][]struct {
 		{
 			Path:     jsonpath.MustCompile("$.spec.identityProviders[0].name"),
 			Template: "{{ .Config.IdentityName }}",
+		},
+	},
+	"ClusterResourceQuota.quota.openshift.io/persistent-volume-quota": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.quota.hard.'requests.storage'"),
+			Template: "{{ .Config.StorageQuota }}",
+		},
+	},
+	"ClusterResourceQuota.quota.openshift.io/loadbalancer-quota": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.quota.hard.'services.loadbalancers'"),
+			Template: "{{ .Config.LoadBalancerQuota }}",
 		},
 	},
 }

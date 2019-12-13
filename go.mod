@@ -1,27 +1,33 @@
 module github.com/openshift/static-config-operator
 
 require (
-	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
+	github.com/docker/docker v1.13.1 // indirect
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-openapi/spec v0.19.2
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
+	github.com/go-openapi/spec v0.19.3
 	github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d // indirect
 	github.com/google/go-cmp v0.3.1
 	github.com/google/gofuzz v1.0.0 // indirect
+	github.com/openshift/api v3.9.0+incompatible // indirect
+	github.com/openshift/client-go v3.9.0+incompatible // indirect
 	github.com/operator-framework/operator-sdk v0.0.0-00010101000000-000000000000
-	github.com/spf13/pflag v1.0.3
+	github.com/sirupsen/logrus v1.4.2
+	github.com/spf13/pflag v1.0.5
 	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4
-	golang.org/x/net v0.0.0-20190812203447-cdfb69ac37fc // indirect
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	golang.org/x/tools v0.0.0-20191213032237-7093a17b0467 // indirect
 	google.golang.org/genproto v0.0.0-20190502173448-54afdca5d873 // indirect
 	google.golang.org/grpc v1.23.0 // indirect
 	gopkg.in/yaml.v2 v2.2.4 // indirect
-	k8s.io/api v0.0.0-20190918155943-95b840bb6a1f
+	k8s.io/api v0.17.0
 	k8s.io/apiextensions-apiserver v0.0.0-20190918161926-8f644eb6e783
-	k8s.io/apimachinery v0.0.0-20191023225540-31cb258e7ad9
+	k8s.io/apimachinery v0.17.0
+	k8s.io/cli-runtime v0.17.0
 	k8s.io/client-go v11.0.1-0.20190409021438-1a26190bd76a+incompatible
 	k8s.io/klog v1.0.0 // indirect
 	k8s.io/kube-aggregator v0.0.0-20190409022021-00b8e31abe9d
 	k8s.io/kube-openapi v0.0.0-20190816220812-743ec37842bf
+	k8s.io/kubernetes v1.14.2
 	k8s.io/utils v0.0.0-20191010214722-8d271d903fe4 // indirect
 	sigs.k8s.io/controller-runtime v0.2.0
 )
@@ -48,3 +54,5 @@ replace (
 )
 
 replace github.com/operator-framework/operator-sdk => github.com/operator-framework/operator-sdk v0.11.0
+
+go 1.13

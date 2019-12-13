@@ -133,34 +133,42 @@ func (s *Sync) Sync() (reconcile.Result, error) {
 	}
 	sort.Strings(keys)
 
+	// cvo needs to land early to get initialized
+	log.Info("applying CVO resources")
+	if err := s.applyResources(cvoFilter, keys); err != nil {
+		return reconcile.Result{}, err
+	}
+	log.Info("applying OperatorHub resources")
+	if err := s.applyResources(ohFilter, keys); err != nil {
+		return reconcile.Result{}, err
+	}
 	// crd needs to land early to get initialized
-	log.Info("applying crd resources")
+	log.Info("applying CRD resources")
 	if err := s.applyResources(crdFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
 	// namespaces must exist before namespaced objects.
-	log.Info("applying ns resources")
+	log.Info("applying Namespace resources")
 	if err := s.applyResources(nsFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
+	log.Info("applying OperatorGroup resources")
+	if err := s.applyResources(ogFilter, keys); err != nil {
+		return reconcile.Result{}, err
+	}
 	// create serviceaccounts
-	log.Info("applying sa resources")
+	log.Info("applying Service Account resources")
 	if err := s.applyResources(saFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
 	// create all secrets and configmaps
-	log.Info("applying cfg resources")
+	log.Info("applying ConfigMaps/Secrets resources")
 	if err := s.applyResources(cfgFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
 	// default storage class must be created before PVCs as the admission controller is edge-triggered
-	log.Info("applying storageClass resources")
+	log.Info("applying StorageClass resources")
 	if err := s.applyResources(storageClassFilter, keys); err != nil {
-		return reconcile.Result{}, err
-	}
-
-	log.Info("applying Deployment resources")
-	if err := s.applyResources(depFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
 
@@ -170,7 +178,7 @@ func (s *Sync) Sync() (reconcile.Result, error) {
 	}
 
 	// create all, except targeted CRDs resources
-	log.Info("applying other resources")
+	log.Info("applying all other resources")
 	if err := s.applyResources(everythingElseFilter, keys); err != nil {
 		return reconcile.Result{}, err
 	}
