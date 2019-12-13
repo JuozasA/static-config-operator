@@ -296,13 +296,13 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 			return nil
 		}
 
-		log.Info("Ensuring required labels exists on " + keyFunc(o.GroupVersionKind().GroupKind(), ns, o.Object["name"].(string)))
 		new, err := dc.Resource(res, ns).Patch(o.Object["name"].(string), types.MergePatchType, patch)
 		if err != nil {
 			return err
 		}
 
 		if diff := cmp.Diff(*old, *new); diff != "" {
+			log.Info("Ensuring required labels exists on " + keyFunc(o.GroupVersionKind().GroupKind(), ns, o.Object["name"].(string)))
 			log.Info(diff)
 		}
 
