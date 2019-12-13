@@ -11,10 +11,10 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.Config":       schema_pkg_apis_staticcontent_v1alpha1_Config(ref),
-		"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec":   schema_pkg_apis_staticcontent_v1alpha1_ConfigSpec(ref),
-		"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus": schema_pkg_apis_staticcontent_v1alpha1_ConfigStatus(ref),
-		"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig": schema_pkg_apis_staticcontent_v1alpha1_StaticConfig(ref),
+		"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.Config":       schema_pkg_apis_staticcontent_v1alpha1_Config(ref),
+		"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec":   schema_pkg_apis_staticcontent_v1alpha1_ConfigSpec(ref),
+		"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus": schema_pkg_apis_staticcontent_v1alpha1_ConfigStatus(ref),
+		"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig": schema_pkg_apis_staticcontent_v1alpha1_StaticConfig(ref),
 	}
 }
 
@@ -46,19 +46,19 @@ func schema_pkg_apis_staticcontent_v1alpha1_Config(ref common.ReferenceCallback)
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec"),
+							Ref: ref("github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus"),
+							Ref: ref("github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec", "github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigSpec", "github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -71,7 +71,7 @@ func schema_pkg_apis_staticcontent_v1alpha1_ConfigSpec(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"config": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig"),
+							Ref: ref("github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig"),
 						},
 					},
 					"syncDuration": {
@@ -90,7 +90,7 @@ func schema_pkg_apis_staticcontent_v1alpha1_ConfigSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/JuozasA/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig"},
+			"github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1.StaticConfig"},
 	}
 }
 
