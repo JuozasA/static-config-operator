@@ -12,4 +12,3 @@ subjects:
 - kind: ServiceAccount
   name: sre-pruner-sa
   namespace: openshift-sre-pruning
-

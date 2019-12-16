@@ -260,13 +260,11 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 			break
 		}
 	}
-
 	if gr == nil {
 		return errors.New("couldn't find group " + o.GroupVersionKind().Group)
 	}
 
 	o = o.DeepCopy()
-
 	var res *metav1.APIResource
 	for _, r := range gr.VersionedResources[o.GroupVersionKind().Version] {
 		if gr.Group.Name == "template.openshift.io" && r.Name == "processedtemplates" {
@@ -315,7 +313,6 @@ func (s *Sync) write(o *unstructured.Unstructured) error {
 		if kerrors.IsNotFound(err) {
 			log.Info("Create " + keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()))
 			markSyncPodOwned(o)
-
 			_, err = dc.Resource(res, o.GetNamespace()).Create(o)
 			if kerrors.IsAlreadyExists(err) {
 				// The "hot path" in write() is Get, check, then maybe Update.

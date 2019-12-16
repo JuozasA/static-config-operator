@@ -6,3 +6,4 @@ namespace: openshift-marketplace
 patch: |-
   { "spec": { "registryNamespace": "curated-certified-operators" } }
 patchType: merge
+
