@@ -28,7 +28,7 @@ data:
     -----END CERTIFICATE-----
 kind: ConfigMap
 metadata:
-  name: osd-ldap-ca-configmap
-  namespace: openshift-config
   labels:
     api.openshift.com/managed: "true"
+  name: osd-ldap-ca-configmap
+  namespace: openshift-config

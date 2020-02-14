@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
+    api.openshift.com/managed: "true"
     prometheus: sre-alerts-stuck-builds
     role: alert-rules
-    api.openshift.com/managed: "true"
   name: sre-alerts-stuck-builds
   namespace: openshift-monitoring
 spec:
@@ -12,7 +12,8 @@ spec:
   - name: sre-alerts-stuck-builds
     rules:
     - alert: StuckNewBuilds3MinSRE
-      expr: count(openshift_build_active_time_seconds{phase="New"} < time() - 180) > 0
+      expr: count(openshift_build_active_time_seconds{phase="New"} < time() - 180)
+        > 0
       labels:
-        severity: warning
         namespace: openshift-monitoring
+        severity: warning

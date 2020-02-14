@@ -1,14 +1,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: aqua-scanner-binding
   labels:
     api.openshift.com/managed: "true"
+  name: aqua-scanner-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: image-scanner
 subjects:
-  - kind: ServiceAccount
-    name: aqua-sa
-    namespace: openshift-aqua
+- kind: ServiceAccount
+  name: aqua-sa
+  namespace: openshift-aqua

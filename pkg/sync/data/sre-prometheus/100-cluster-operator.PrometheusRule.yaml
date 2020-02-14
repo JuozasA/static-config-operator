@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
+    api.openshift.com/managed: "true"
     prometheus: sre-cluster-operator-down-alerts
     role: alert-rules
-    api.openshift.com/managed: "true"
   name: sre-cluster-operator-down-alerts
   namespace: openshift-monitoring
 spec:
@@ -15,11 +15,11 @@ spec:
       expr: cluster_operator_up == 0
       for: 15m
       labels:
-        severity: critical
         namespace: openshift-monitoring
+        severity: critical
     - alert: ClusterOperatorDegradedSRE
       expr: cluster_operator_conditions{condition='Degraded'} == 1
       for: 15m
       labels:
-        severity: critical
         namespace: openshift-monitoring
+        severity: critical

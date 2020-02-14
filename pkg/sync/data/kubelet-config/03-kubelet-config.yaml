@@ -1,14 +1,14 @@
 apiVersion: machineconfiguration.openshift.io/v1
 kind: KubeletConfig
 metadata:
-  name: custom-kubelet
   labels:
     api.openshift.com/managed: "true"
+  name: custom-kubelet
 spec:
-  machineConfigPoolSelector:
-    matchLabels:
-      managed.openshift.io/custom-kubelet: ""
   kubeletConfig:
     systemReserved:
       cpu: 1000m
       memory: 1Gi
+  machineConfigPoolSelector:
+    matchLabels:
+      managed.openshift.io/custom-kubelet: ""

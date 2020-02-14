@@ -3,6 +3,5 @@ applyMode: AlwaysApply
 kind: OperatorSource
 name: redhat-operators
 namespace: openshift-marketplace
-patch: |-
-  { "spec": { "registryNamespace": "curated-redhat-operators" } }
+patch: '{ "spec": { "registryNamespace": "curated-redhat-operators" } }'
 patchType: merge

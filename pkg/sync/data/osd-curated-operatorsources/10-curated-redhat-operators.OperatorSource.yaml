@@ -3,10 +3,10 @@ kind: OperatorSource
 metadata:
   finalizers:
   - finalizer.operatorsources.operators.coreos.com
-  name: osd-curated-redhat-operators
-  namespace: openshift-marketplace
   labels:
     api.openshift.com/managed: "true"
+  name: osd-curated-redhat-operators
+  namespace: openshift-marketplace
 spec:
   authorizationToken: {}
   displayName: Red Hat Operators

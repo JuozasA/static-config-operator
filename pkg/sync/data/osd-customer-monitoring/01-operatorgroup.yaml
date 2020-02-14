@@ -3,10 +3,10 @@ kind: OperatorGroup
 metadata:
   annotations:
     olm.providedAPIs: ClusterLogging.v1.logging.openshift.io
-  name: openshift-customer-monitoring
-  namespace: openshift-customer-monitoring
   labels:
     api.openshift.com/managed: "true"
+  name: openshift-customer-monitoring
+  namespace: openshift-customer-monitoring
 spec:
   serviceAccount:
     metadata:

@@ -2,30 +2,26 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
+    api.openshift.com/managed: "true"
     prometheus: sre-router-health
     role: alert-rules
-    api.openshift.com/managed: "true"
   name: sre-router-health
   namespace: openshift-monitoring
-spec:  
+spec:
   groups:
   - name: sre-router-health
     rules:
     - alert: RouterAvailabilityLT50PctSRE
-      expr: |
-        (sum(avg_over_time(kube_replicationcontroller_status_ready_replicas[1h])) by (replicationcontroller,namespace) 
-        /
-        on(replicationcontroller,namespace)
-        max(kube_replicationcontroller_status_replicas{namespace="default",replicationcontroller=~"router.?-.*"} >0) by (replicationcontroller,namespace)) < 0.5
+      expr: "(sum(avg_over_time(kube_replicationcontroller_status_ready_replicas[1h]))
+        by (replicationcontroller,namespace) \n/\non(replicationcontroller,namespace)\nmax(kube_replicationcontroller_status_replicas{namespace=\"default\",replicationcontroller=~\"router.?-.*\"}
+        >0) by (replicationcontroller,namespace)) < 0.5\n"
       labels:
+        namespace: openshift-monitoring
         severity: warning
-        namespace: openshift-monitoring
     - alert: RouterAvailabilityLT30PctSRE
-      expr: |
-        (sum(avg_over_time(kube_replicationcontroller_status_ready_replicas[1h])) by (replicationcontroller,namespace) 
-        /
-        on(replicationcontroller,namespace)
-        max(kube_replicationcontroller_status_replicas{namespace="default",replicationcontroller=~"router.?-.*"} >0) by (replicationcontroller,namespace)) < 0.3
+      expr: "(sum(avg_over_time(kube_replicationcontroller_status_ready_replicas[1h]))
+        by (replicationcontroller,namespace) \n/\non(replicationcontroller,namespace)\nmax(kube_replicationcontroller_status_replicas{namespace=\"default\",replicationcontroller=~\"router.?-.*\"}
+        >0) by (replicationcontroller,namespace)) < 0.3\n"
       labels:
-        severity: critical
         namespace: openshift-monitoring
+        severity: critical

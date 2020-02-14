@@ -1,12 +1,12 @@
-kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
 metadata:
-  name: managed-velero-operator-cluster-config-v1-reader
-  namespace: kube-system
   labels:
+    api.openshift.com/managed: "true"
     owner: managed-velero-operator
     owner.namespace: managed-velero-operator
-    api.openshift.com/managed: "true"
+  name: managed-velero-operator-cluster-config-v1-reader
+  namespace: kube-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

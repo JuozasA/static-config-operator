@@ -1,10 +1,10 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: dedicated-admins-openshift-aqua
-  namespace: openshift-aqua
   labels:
     api.openshift.com/managed: "true"
+  name: dedicated-admins-openshift-aqua
+  namespace: openshift-aqua
 rules:
 - apiGroups:
   - ""
@@ -22,18 +22,18 @@ rules:
   - subscriptions
   - clusterserviceversions
   verbs:
-  - "*"
+  - '*'
 - apiGroups:
   - ""
-  resources:
-  - secrets
   resourceNames:
   - aqua-database-password
   - aqua-registry
+  resources:
+  - secrets
   verbs:
-  - "*"
+  - '*'
 - apiGroups:
-  - "operator.aquasec.com"
+  - operator.aquasec.com
   resources:
   - aquacsps
   - aquadatabases
@@ -42,7 +42,7 @@ rules:
   - aquascanners
   - aquaservers
   verbs:
-  - "*"
+  - '*'
 - apiGroups:
   - ""
   resources:
@@ -51,10 +51,10 @@ rules:
   - create
 - apiGroups:
   - ""
-  resources:
-  - serviceaccounts
   resourceNames:
   - aqua-sa
+  resources:
+  - serviceaccounts
   verbs:
   - update
 - apiGroups:

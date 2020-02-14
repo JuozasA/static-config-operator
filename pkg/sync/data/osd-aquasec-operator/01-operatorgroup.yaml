@@ -9,10 +9,10 @@ metadata:
       - AquaGateway.v1alpha1.operator.aquasec.com
       - AquaScanner.v1alpha1.operator.aquasec.com
       - AquaServer.v1alpha1.operator.aquasec.com
-  name: openshift-aqua
-  namespace: openshift-aqua
   labels:
     api.openshift.com/managed: "true"
+  name: openshift-aqua
+  namespace: openshift-aqua
 spec:
   serviceAccount:
     metadata:

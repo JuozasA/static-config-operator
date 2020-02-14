@@ -3,7 +3,5 @@ applyMode: AlwaysApply
 kind: OperatorSource
 name: certified-operators
 namespace: openshift-marketplace
-patch: |-
-  { "spec": { "registryNamespace": "curated-certified-operators" } }
+patch: '{ "spec": { "registryNamespace": "curated-certified-operators" } }'
 patchType: merge
-

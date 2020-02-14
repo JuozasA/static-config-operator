@@ -1,16 +1,16 @@
-kind: ClusterResourceQuota
 apiVersion: quota.openshift.io/v1
+kind: ClusterResourceQuota
 metadata:
-  name: loadbalancer-quota
   labels:
     api.openshift.com/managed: "true"
+  name: loadbalancer-quota
 spec:
+  quota:
+    hard:
+      services.loadbalancers: '*** GENERATED ***'
   selector:
     annotations: null
     labels:
       matchExpressions:
       - key: managed.openshift.io/service-lb-quota-exempt
         operator: DoesNotExist
-  quota:
-    hard:
-      services.loadbalancers: '*** GENERATED ***'

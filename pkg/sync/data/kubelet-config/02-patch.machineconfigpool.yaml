@@ -1,7 +1,6 @@
-kind: MachineConfigPool
 apiVersion: machineconfiguration.openshift.io/v1
-name: master
 applyMode: AlwaysApply
-patch: |-
-  { "metadata": {"labels": {"managed.openshift.io/custom-kubelet":""} } }
+kind: MachineConfigPool
+name: master
+patch: '{ "metadata": {"labels": {"managed.openshift.io/custom-kubelet":""} } }'
 patchType: merge
